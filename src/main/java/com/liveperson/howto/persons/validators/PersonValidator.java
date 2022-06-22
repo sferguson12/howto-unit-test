@@ -2,7 +2,7 @@ package com.liveperson.howto.persons.validators;
 
 import com.liveperson.howto.persons.contracts.Person;
 
-public class PersonValidator implements IPersonValidator {
+public class PersonValidator implements IValidator<Person> {
 
     @Override
     public boolean isValid(Person person) {

@@ -1,5 +1,6 @@
 package com.liveperson.howto.persons.controllers;
 
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -23,6 +24,7 @@ import com.liveperson.howto.persons.contracts.PersonRequest;
 import com.liveperson.howto.persons.exceptions.ValidationException;
 import com.liveperson.howto.persons.providers.IPersonProvider;
 import com.liveperson.howto.persons.translators.IPersonTranslator;
+import com.liveperson.howto.persons.validators.IValidator;
 
 @RunWith(MockitoJUnitRunner.class)
 public class PersonControllerTest {
@@ -35,6 +37,9 @@ public class PersonControllerTest {
     @Mock
     IPersonTranslator translator;
 
+    @Mock
+    IValidator<PersonRequest> validator;
+
     @InjectMocks
     PersonController controller;
 
@@ -43,6 +48,8 @@ public class PersonControllerTest {
         fixture = new JFixture();
         fixture.customise().circularDependencyBehaviour().omitSpecimen();
         fixture.customise().noResolutionBehaviour().omitSpecimen();
+
+        when(validator.isValid(any(PersonRequest.class))).thenReturn(true);
     }
 
     //#region GET
@@ -61,6 +68,20 @@ public class PersonControllerTest {
     //#endregion
 
     //#region POST
+    @Test
+    public void savePerson_WithInvalidRequest_ReturnsNull() {
+        // No need to adjust the request based on validation rules
+        final PersonRequest request = fixture.create(PersonRequest.class);
+
+        when(validator.isValid(request)).thenReturn(false);
+
+        Person result = controller.savePerson(request);
+
+        verify(translator, times(0)).toPerson(any(PersonRequest.class));
+        verify(provider, times(0)).save(any(Person.class));
+        assertNull(result);
+    }
+
     @Test
     public void savePerson_WithSaveException_ReturnsNull() {
         final PersonRequest request = fixture.create(PersonRequest.class);

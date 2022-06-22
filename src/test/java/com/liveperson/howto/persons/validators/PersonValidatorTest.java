@@ -39,8 +39,9 @@ public class PersonValidatorTest {
         person.setFirstName(null);
 
         boolean result = validator.isValid(person);
+
         assertFalse(result);
-        // Or, if you prefer
+        // Can also use this, but consider arrange/act/assert
         assertFalse(validator.isValid(person));
     }
 
@@ -50,9 +51,8 @@ public class PersonValidatorTest {
         person.setLastName(null);
 
         boolean result = validator.isValid(person);
+
         assertFalse(result);
-        // Or
-        assertFalse(validator.isValid(person));
     }
 
     @Test
@@ -60,8 +60,7 @@ public class PersonValidatorTest {
         Person person = fixture.create(Person.class);
 
         boolean result = validator.isValid(person);
+
         assertTrue(result);
-        // Or
-        assertTrue(validator.isValid(person));
     }
 }

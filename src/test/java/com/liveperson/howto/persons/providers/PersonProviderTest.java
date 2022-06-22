@@ -20,7 +20,7 @@ import com.liveperson.howto.persons.categories.DoNotDoThisTest;
 import com.liveperson.howto.persons.contracts.Person;
 import com.liveperson.howto.persons.dataproviders.IDataProvider;
 import com.liveperson.howto.persons.exceptions.ValidationException;
-import com.liveperson.howto.persons.validators.IPersonValidator;
+import com.liveperson.howto.persons.validators.IValidator;
 
 @RunWith(MockitoJUnitRunner.class)
 public class PersonProviderTest {
@@ -31,7 +31,7 @@ public class PersonProviderTest {
     IDataProvider<Person> dataProvider;
 
     @Mock
-    IPersonValidator validator;
+    IValidator<Person> validator;
 
     @InjectMocks
     PersonProvider provider;
@@ -70,7 +70,7 @@ public class PersonProviderTest {
         }
         catch (NullPointerException ex) {
             // Verifying the correct exception was thrown for the correct reason
-            assertThat(ex.getMessage()).matches("Person.*");
+            assertThat(ex.getMessage()).matches("person.*");
         }
     }
 
@@ -83,7 +83,7 @@ public class PersonProviderTest {
         }
         catch (NullPointerException ex) {
             // Verifying the correct exception was thrown for the correct reason
-            assertThat(ex.getMessage()).matches("Person.*");
+            assertThat(ex.getMessage()).matches("person.*");
         }
     }
 

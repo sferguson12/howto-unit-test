@@ -1,9 +1,8 @@
 package com.liveperson.howto.persons.controllers;
 
-import java.io.InvalidObjectException;
-
 import com.liveperson.howto.persons.contracts.Person;
 import com.liveperson.howto.persons.contracts.PersonRequest;
+import com.liveperson.howto.persons.exceptions.ValidationException;
 import com.liveperson.howto.persons.providers.IPersonProvider;
 import com.liveperson.howto.persons.translators.IPersonTranslator;
 
@@ -40,7 +39,7 @@ public class PersonController {
         try {
             result = personProvider.save(person);
         }
-        catch (InvalidObjectException ex) {
+        catch (ValidationException ex) {
             log.error("Failed to save person request {}", personRequest.getRequestType(), ex);
         }
 

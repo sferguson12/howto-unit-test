@@ -4,8 +4,6 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import java.io.InvalidObjectException;
-
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertNull;
@@ -22,6 +20,7 @@ import com.flextrade.jfixture.JFixture;
 import com.liveperson.howto.persons.categories.DoNotDoThisTest;
 import com.liveperson.howto.persons.contracts.Person;
 import com.liveperson.howto.persons.contracts.PersonRequest;
+import com.liveperson.howto.persons.exceptions.ValidationException;
 import com.liveperson.howto.persons.providers.IPersonProvider;
 import com.liveperson.howto.persons.translators.IPersonTranslator;
 
@@ -63,10 +62,10 @@ public class PersonControllerTest {
 
     //#region POST
     @Test
-    public void savePerson_WithSaveException_ReturnsNull() throws InvalidObjectException {
+    public void savePerson_WithSaveException_ReturnsNull() {
         final PersonRequest request = fixture.create(PersonRequest.class);
         final Person person = fixture.create(Person.class);
-        final InvalidObjectException exception = fixture.create(InvalidObjectException.class);
+        final ValidationException exception = fixture.create(ValidationException.class);
 
         when(translator.toPerson(request)).thenReturn(person);
         when(provider.save(person)).thenThrow(exception);
@@ -77,7 +76,7 @@ public class PersonControllerTest {
     }
 
     @Test
-    public void savePersonSavesTranslatedPerson() throws InvalidObjectException {
+    public void savePersonSavesTranslatedPerson() {
         final PersonRequest request = fixture.create(PersonRequest.class);
         final Person person = fixture.create(Person.class);
         final Person savedPerson = fixture.create(Person.class);
@@ -111,7 +110,7 @@ public class PersonControllerTest {
 
     @Category(DoNotDoThisTest.class)
     @Test
-    public void savePerson_SavesTranslatedPerson_BAD02() throws InvalidObjectException {
+    public void savePerson_SavesTranslatedPerson_BAD02() {
         final PersonRequest request = fixture.create(PersonRequest.class);
         final Person person = fixture.create(Person.class);
         final Person savedPerson = fixture.create(Person.class);

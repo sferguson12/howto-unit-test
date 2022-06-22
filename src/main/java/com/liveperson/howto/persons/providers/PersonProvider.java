@@ -6,6 +6,7 @@ import org.springframework.stereotype.Component;
 
 import com.liveperson.howto.persons.contracts.Person;
 import com.liveperson.howto.persons.dataproviders.IDataProvider;
+import com.liveperson.howto.persons.exceptions.ValidationException;
 import com.liveperson.howto.persons.validators.IPersonValidator;
 
 import lombok.extern.slf4j.Slf4j;
@@ -30,13 +31,13 @@ public class PersonProvider implements IPersonProvider {
     }
 
     @Override
-    public Person save(Person person) throws InvalidObjectException {
+    public Person save(Person person) {
         if (person == null) {
             throw new NullPointerException("Person must be provided");
         }
 
         if (!personValidator.isValid(person)) {
-            throw new InvalidObjectException("Person is not valid");
+            throw new ValidationException("Person is not valid");
         }
 
         log.debug("Validated person save for id {}", person.getId());

@@ -7,8 +7,6 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import java.io.InvalidObjectException;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
@@ -21,6 +19,7 @@ import com.flextrade.jfixture.JFixture;
 import com.liveperson.howto.persons.categories.DoNotDoThisTest;
 import com.liveperson.howto.persons.contracts.Person;
 import com.liveperson.howto.persons.dataproviders.IDataProvider;
+import com.liveperson.howto.persons.exceptions.ValidationException;
 import com.liveperson.howto.persons.validators.IPersonValidator;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -55,7 +54,7 @@ public class PersonProviderTest {
 
     //#region save
     @Test(expected = NullPointerException.class)
-    public void save_WithNullPerson_ThrowsException() throws InvalidObjectException {
+    public void save_WithNullPerson_ThrowsException() {
         provider.save(null);
         // Optional, though perhaps useful
         // Note on 'any' for positive vs. negative verifications
@@ -64,7 +63,7 @@ public class PersonProviderTest {
 
     @Category(DoNotDoThisTest.class)
     @Test
-    public void save_WithNullPerson_ThrowsException_BAD01() throws InvalidObjectException {
+    public void save_WithNullPerson_ThrowsException_BAD01() {
         try {
             // What is the expected outcome here?  What if we don't get that?
             provider.save(null);
@@ -76,7 +75,7 @@ public class PersonProviderTest {
     }
 
     @Test
-    public void save_WithNullPerson_ThrowsException_ALT01() throws InvalidObjectException {
+    public void save_WithNullPerson_ThrowsException_ALT01() {
         try {
             provider.save(null);
             // Vital - otherwise a missing exception allows the test to pass
@@ -88,8 +87,8 @@ public class PersonProviderTest {
         }
     }
 
-    @Test(expected = InvalidObjectException.class)
-    public void save_WithInvalidPerson_ThrowsException() throws InvalidObjectException {
+    @Test(expected = ValidationException.class)
+    public void save_WithInvalidPerson_ThrowsException() {
         Person person = fixture.create(Person.class);
         when(validator.isValid(person)).thenReturn(false);
         provider.save(person);
@@ -105,13 +104,13 @@ public class PersonProviderTest {
             // Vital - otherwise a missing exception allows the test to pass
             fail("Save did not throw expected exception");
         }
-        catch (InvalidObjectException ex) {
+        catch (ValidationException ex) {
             assertThat(ex.getMessage()).matches(".*not valid");
         }
     }
 
     @Test
-    public void save_WithValidPerson_CallsDataProvider() throws InvalidObjectException {
+    public void save_WithValidPerson_CallsDataProvider() {
         Person person = fixture.create(Person.class);
         when(validator.isValid(person)).thenReturn(true);
         provider.save(person);

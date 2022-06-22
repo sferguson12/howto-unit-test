@@ -1,7 +1,5 @@
 package com.liveperson.howto.persons.providers;
 
-import java.io.InvalidObjectException;
-
 import org.springframework.stereotype.Component;
 
 import com.liveperson.howto.persons.contracts.Person;

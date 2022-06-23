@@ -1,10 +1,12 @@
 package com.liveperson.howto.persons.providers;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 
 import org.junit.Before;
@@ -36,6 +38,9 @@ public class DepartmentProviderTest {
         fixture = new JFixture();
         fixture.customise().circularDependencyBehaviour().omitSpecimen();
         fixture.customise().noResolutionBehaviour().omitSpecimen();
+
+        // Customize number of elements in a collection type
+        fixture.customise().repeatCount(5);
     }
 
     // Example from QueryMessagesSystemTest.queryMessagesByAgentTest()
@@ -57,13 +62,17 @@ public class DepartmentProviderTest {
         int departmentId = fixture.create(Integer.class);
         int roleId = fixture.create(Integer.class);
 
-        Person person =  fixture.create(Person.class);
-        List<Person> persons = new ArrayList<Person>(Arrays.asList(person));
+        Collection<Person> collection = fixture.collections().createCollection(Person.class);
+        List<Person> persons = new ArrayList<Person>(collection);
         when(dataProvider.query(departmentId, roleId)).thenReturn(persons);
 
         // Why is this better?  Show with broken code
         List<Person> result = provider.getPersonsInDepartment(departmentId, roleId);
 
-        assertThat(result).containsExactly(person);
+        // Simple reference comparison
+        assertEquals(persons, result);
+
+        // List comparison with AssertJ
+        assertThat(result).containsExactlyElementsOf(persons);
     }
 }

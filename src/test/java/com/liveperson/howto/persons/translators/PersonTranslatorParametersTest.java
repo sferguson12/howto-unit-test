@@ -47,6 +47,7 @@ public class PersonTranslatorParametersTest {
         return Arrays.asList("", null);
     }
 
+    // Test runs once for each value in the collection
     @Test
     public void toPerson_WithInvalidMiddleName_HasNullMiddleInitial() {
         PersonRequest request = fixture.create(PersonRequest.class);

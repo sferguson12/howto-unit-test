@@ -11,6 +11,8 @@ import com.liveperson.howto.persons.contracts.PersonRequest;
 
 public class PersonTranslator implements IPersonTranslator {
 
+    private final ZoneId utcZone = ZoneId.of("UTC");
+
     @Override
     public Person toPerson(PersonRequest personRequest) {
         if (personRequest == null) {
@@ -42,8 +44,8 @@ public class PersonTranslator implements IPersonTranslator {
         if (dateOfBirth == null) return null;
 
         Long delta = ChronoUnit.YEARS.between(
-            dateOfBirth.atZone(ZoneId.systemDefault()),
-            Instant.now().atZone(ZoneId.systemDefault()));
+            dateOfBirth.atZone(utcZone),
+            Instant.now().atZone(utcZone));
         return delta.intValue();
     }
 }

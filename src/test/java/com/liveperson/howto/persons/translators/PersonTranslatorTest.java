@@ -57,6 +57,17 @@ public class PersonTranslatorTest {
         assertNull(result.getMiddleInitial());
     }
     
+    // Why do this test? Compare to getMiddleInitial() method in translator
+    @Test
+    public void toPerson_WithSingleCharacterMiddleName_HasMiddleInitial() {
+        PersonRequest request = fixture.create(PersonRequest.class);
+        Character initial = fixture.create(Character.class);
+        request.setMiddleName(initial.toString());
+        
+        Person result = translator.toPerson(request);
+        assertEquals(result.getMiddleInitial(), initial);
+    }
+
     @Test
     public void toPerson_WithNullDateOfBirth_HasNullAge() {
         PersonRequest request = fixture.create(PersonRequest.class);
@@ -112,8 +123,8 @@ public class PersonTranslatorTest {
         PersonRequest request = fixture.create(PersonRequest.class);
 
         Long age = ChronoUnit.YEARS.between(
-            request.getDateOfBirth().atZone(ZoneId.systemDefault()),
-            Instant.now().atZone(ZoneId.systemDefault()));
+            request.getDateOfBirth().atZone(utcZone),
+            Instant.now().atZone(utcZone));
 
         Person result = translator.toPerson(request);
 
